@@ -29,4 +29,29 @@ video {
 
 button {
   margin: 5px;
+  cursor: pointer;
+}
+
+/* 🔐 LOGIN */
+#loginScreen {
+  position: fixed;
+  inset: 0;
+  background: #111;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#loginScreen input {
+  margin: 5px;
+  padding: 10px;
+  width: 200px;
+}
+
+#loginScreen button {
+  padding: 10px;
+  width: 220px;
+  background: red;
+  border: none;
 }
