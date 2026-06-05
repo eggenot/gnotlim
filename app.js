@@ -4,11 +4,29 @@ let live = [];
 
 const player = document.getElementById("player");
 const list = document.getElementById("list");
-const searchInput = document.getElementById("search");
 
-let favorites = JSON.parse(localStorage.getItem("fav") || "[]");
+/* =========================
+   🔐 LOGIN SYSTEM
+========================= */
+const USER = "admin";
+const PASS = "1234";
 
-// LOAD DATA
+function login() {
+  let u = document.getElementById("user").value;
+  let p = document.getElementById("pass").value;
+
+  if (u === USER && p === PASS) {
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("app").style.display = "block";
+    loadAll();
+  } else {
+    document.getElementById("msg").innerText = "❌ Login salah!";
+  }
+}
+
+/* =========================
+   LOAD DATA
+========================= */
 async function loadAll() {
   movies = await (await fetch("movies.json")).json();
   series = await (await fetch("series.json")).json();
@@ -17,35 +35,17 @@ async function loadAll() {
   showMovies();
 }
 
-// PLAY
+/* =========================
+   PLAYER
+========================= */
 function play(url) {
   player.src = url;
   player.play();
 }
 
-// FAVORITE
-function toggleFav(item) {
-  favorites.push(item);
-  localStorage.setItem("fav", JSON.stringify(favorites));
-}
-
-// SEARCH
-function searchMedia() {
-  let q = searchInput.value.toLowerCase();
-
-  let all = [
-    ...movies.map(m => ({ ...m, type: "movie" })),
-    ...series.map(s => ({ ...s, type: "series" })),
-    ...live.map(l => ({ ...l, type: "live" }))
-  ];
-
-  list.innerHTML = "";
-
-  all.filter(i => i.title.toLowerCase().includes(q))
-     .forEach(renderCard);
-}
-
-// RENDER MOVIES
+/* =========================
+   MOVIES (NETFLIX STYLE)
+========================= */
 function showMovies() {
   list.innerHTML = "";
 
@@ -56,18 +56,19 @@ function showMovies() {
     div.innerHTML = `
       🎬 ${m.title}<br>
       <button onclick="play('${m.url}')">Play</button>
-      <button onclick='toggleFav(${JSON.stringify(m)})'>❤️</button>
     `;
 
     list.appendChild(div);
   });
 }
 
-// SERIES
+/* =========================
+   SERIES (SEASON + EPISODE)
+========================= */
 function showSeries() {
   list.innerHTML = "";
 
-  series.forEach((s, si) => {
+  series.forEach(s => {
     let div = document.createElement("div");
     div.className = "card";
 
@@ -77,11 +78,7 @@ function showSeries() {
       html += `<b>Season ${season.season}</b><br>`;
 
       season.episodes.forEach(ep => {
-        html += `
-          <button onclick="play('${ep.url}')">
-            ${ep.title}
-          </button>
-        `;
+        html += `<button onclick="play('${ep.url}')">${ep.title}</button>`;
       });
     });
 
@@ -90,7 +87,9 @@ function showSeries() {
   });
 }
 
-// LIVE TV + IPTV INPUT
+/* =========================
+   LIVE TV (IPTV + JSON)
+========================= */
 function showLive() {
   list.innerHTML = "";
 
@@ -101,7 +100,6 @@ function showLive() {
     div.innerHTML = `
       📡 ${l.title}<br>
       <small>${l.group}</small><br>
-      <small>${l.epg || ""}</small><br>
       <button onclick="play('${l.url}')">Watch</button>
     `;
 
@@ -109,7 +107,9 @@ function showLive() {
   });
 }
 
-// IMPORT M3U INPUT
+/* =========================
+   IPTV IMPORT M3U
+========================= */
 async function importM3U() {
   let url = document.getElementById("m3uUrl").value;
 
@@ -117,6 +117,8 @@ async function importM3U() {
   let text = await res.text();
 
   let lines = text.split("\n");
+
+  live = [];
 
   for (let i = 0; i < lines.length; i++) {
     if (lines[i].startsWith("#EXTINF")) {
@@ -126,7 +128,7 @@ async function importM3U() {
       live.push({
         title: name,
         url: link,
-        group: "Imported"
+        group: "IPTV Import"
       });
     }
   }
@@ -134,4 +136,31 @@ async function importM3U() {
   showLive();
 }
 
-loadAll();
+/* =========================
+   SEARCH SYSTEM
+========================= */
+function searchMedia() {
+  let q = document.getElementById("search").value.toLowerCase();
+
+  let all = [
+    ...movies.map(m => ({ ...m, type: "movie" })),
+    ...series.map(s => ({ ...s, type: "series" })),
+    ...live.map(l => ({ ...l, type: "live" }))
+  ];
+
+  list.innerHTML = "";
+
+  all
+    .filter(i => i.title.toLowerCase().includes(q))
+    .forEach(i => {
+      let div = document.createElement("div");
+      div.className = "card";
+
+      div.innerHTML = `
+        ${i.title}<br>
+        <button onclick="play('${i.url}')">Play</button>
+      `;
+
+      list.appendChild(div);
+    });
+}
