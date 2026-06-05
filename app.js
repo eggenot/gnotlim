@@ -1,15 +1,19 @@
 const player = document.getElementById("player");
-const menu = document.getElementById("menu");
 const list = document.getElementById("list");
 
 let data;
 
+// load JSON (series + movies)
 fetch("data.json")
   .then(res => res.json())
   .then(json => {
     data = json;
     showMenu("series");
   });
+
+/* =========================
+   IPTV M3U LOADER (LIVE TV)
+========================= */
 async function loadM3U(url) {
   const res = await fetch(url);
   const text = await res.text();
@@ -27,26 +31,15 @@ async function loadM3U(url) {
   }
 
   return channels;
-}async function showIPTV() {
-  list.innerHTML = "";
-
-  let channels = await loadM3U("live.m3u");
-
-  channels.forEach(ch => {
-    let btn = document.createElement("button");
-    btn.innerText = ch.title;
-
-    btn.onclick = () => {
-      player.src = ch.url;
-      player.play();
-    };
-
-    list.appendChild(btn);
-  });
 }
+
+/* =========================
+   MENU SYSTEM
+========================= */
 function showMenu(type) {
   list.innerHTML = "";
 
+  // SERIES
   if (type === "series") {
     data.series.forEach((s, i) => {
       let btn = document.createElement("button");
@@ -58,8 +51,9 @@ function showMenu(type) {
     });
   }
 
+  // MOVIES
   if (type === "movies") {
-    data.movies.forEach((m) => {
+    data.movies.forEach(m => {
       let btn = document.createElement("button");
       btn.innerText = m.title;
 
@@ -69,24 +63,21 @@ function showMenu(type) {
     });
   }
 
+  // LIVE TV (FIXED → pakai IPTV)
   if (type === "live") {
-    data.live.forEach((tv) => {
-      let btn = document.createElement("button");
-      btn.innerText = "LIVE: " + tv.title;
-
-      btn.onclick = () => play(tv.url);
-
-      list.appendChild(btn);
-    });
+    showIPTV();
   }
 }
 
+/* =========================
+   SERIES SYSTEM
+========================= */
 function showSeasons(seriesIndex) {
   list.innerHTML = "";
 
   let series = data.series[seriesIndex];
 
-  series.seasons.forEach((season, si) => {
+  series.seasons.forEach(season => {
     let title = document.createElement("h3");
     title.innerText = "Season " + season.season;
     list.appendChild(title);
@@ -102,6 +93,27 @@ function showSeasons(seriesIndex) {
   });
 }
 
+/* =========================
+   IPTV LIVE TV VIEW
+========================= */
+async function showIPTV() {
+  list.innerHTML = "";
+
+  let channels = await loadM3U("live.m3u");
+
+  channels.forEach(ch => {
+    let btn = document.createElement("button");
+    btn.innerText = "📺 " + ch.title;
+
+    btn.onclick = () => play(ch.url);
+
+    list.appendChild(btn);
+  });
+}
+
+/* =========================
+   PLAYER
+========================= */
 function play(url) {
   player.src = url;
   player.play();
