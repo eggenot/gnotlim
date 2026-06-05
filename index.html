@@ -6,26 +6,39 @@
 </head>
 <body>
 
-<h1>📺 XStream Pro</h1>
+<!-- 🔐 LOGIN SCREEN -->
+<div id="loginScreen">
+  <h2>🔐 XStream Login</h2>
 
-<!-- SEARCH -->
-<input id="search" placeholder="Search media...">
-<button onclick="searchMedia()">Search</button>
+  <input id="user" placeholder="Username">
+  <input id="pass" type="password" placeholder="Password">
 
-<!-- M3U INPUT -->
-<input id="m3uUrl" placeholder="Paste M3U URL">
-<button onclick="importM3U()">Import IPTV</button>
-
-<!-- MENU -->
-<div class="menu">
-  <button onclick="showMovies()">🎬 Movies</button>
-  <button onclick="showSeries()">📺 Series</button>
-  <button onclick="showLive()">📡 Live TV</button>
+  <button onclick="login()">Masuk</button>
+  <p id="msg"></p>
 </div>
 
-<video id="player" controls></video>
+<!-- 🎬 MAIN APP -->
+<div id="app" style="display:none">
 
-<div id="list"></div>
+  <h1>📺 XStream Pro</h1>
+
+  <input id="search" placeholder="Search media...">
+  <button onclick="searchMedia()">Search</button>
+
+  <input id="m3uUrl" placeholder="Paste M3U URL">
+  <button onclick="importM3U()">Import IPTV</button>
+
+  <div class="menu">
+    <button onclick="showMovies()">🎬 Movies</button>
+    <button onclick="showSeries()">📺 Series</button>
+    <button onclick="showLive()">📡 Live TV</button>
+  </div>
+
+  <video id="player" controls></video>
+
+  <div id="list"></div>
+
+</div>
 
 <script src="app.js"></script>
 </body>
