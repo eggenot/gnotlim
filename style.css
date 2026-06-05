@@ -1,5 +1,5 @@
 body {
-  background: #111;
+  background: #0f0f0f;
   color: white;
   font-family: Arial;
   text-align: center;
@@ -8,19 +8,25 @@ body {
 video {
   width: 90%;
   max-width: 900px;
-  margin: 15px;
+  margin: 10px;
+  border-radius: 10px;
+}
+
+.menu button {
+  margin: 5px;
+  padding: 10px;
+  background: red;
+  border: none;
+  color: white;
+}
+
+.card {
+  background: #222;
+  margin: 10px;
+  padding: 10px;
   border-radius: 10px;
 }
 
 button {
-  padding: 10px;
   margin: 5px;
-  background: #1e90ff;
-  border: none;
-  color: white;
-  border-radius: 8px;
-}
-
-.tabs {
-  margin: 10px;
 }
