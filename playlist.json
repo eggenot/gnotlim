@@ -1,10 +1,36 @@
-[
-  {
-    "title": "Sample Video 1",
-    "url": "https://www.w3schools.com/html/mov_bbb.mp4"
-  },
-  {
-    "title": "Sample Video 2",
-    "url": "https://www.w3schools.com/html/movie.mp4"
-  }
-]
+{
+  "series": [
+    {
+      "title": "Anime Contoh",
+      "seasons": [
+        {
+          "season": 1,
+          "episodes": [
+            {
+              "title": "Episode 1",
+              "url": "https://www.w3schools.com/html/mov_bbb.mp4"
+            },
+            {
+              "title": "Episode 2",
+              "url": "https://www.w3schools.com/html/movie.mp4"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+
+  "movies": [
+    {
+      "title": "Movie Contoh",
+      "url": "https://www.w3schools.com/html/movie.mp4"
+    }
+  ],
+
+  "live": [
+    {
+      "title": "Big Buck Bunny TV",
+      "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+    }
+  ]
+}
