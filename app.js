@@ -1,34 +1,75 @@
 const player = document.getElementById("player");
-const playlistDiv = document.getElementById("playlist");
+const menu = document.getElementById("menu");
+const list = document.getElementById("list");
 
-let videos = [];
+let data;
 
-fetch("playlist.json")
+fetch("data.json")
   .then(res => res.json())
-  .then(data => {
-    videos = data;
-    renderPlaylist();
-
-    // auto play first video
-    if (videos.length > 0) {
-      playVideo(0);
-    }
+  .then(json => {
+    data = json;
+    showMenu("series");
   });
 
-function renderPlaylist() {
-  playlistDiv.innerHTML = "";
+function showMenu(type) {
+  list.innerHTML = "";
 
-  videos.forEach((video, index) => {
-    const btn = document.createElement("button");
-    btn.textContent = video.title;
+  if (type === "series") {
+    data.series.forEach((s, i) => {
+      let btn = document.createElement("button");
+      btn.innerText = s.title;
 
-    btn.onclick = () => playVideo(index);
+      btn.onclick = () => showSeasons(i);
 
-    playlistDiv.appendChild(btn);
+      list.appendChild(btn);
+    });
+  }
+
+  if (type === "movies") {
+    data.movies.forEach((m) => {
+      let btn = document.createElement("button");
+      btn.innerText = m.title;
+
+      btn.onclick = () => play(m.url);
+
+      list.appendChild(btn);
+    });
+  }
+
+  if (type === "live") {
+    data.live.forEach((tv) => {
+      let btn = document.createElement("button");
+      btn.innerText = "LIVE: " + tv.title;
+
+      btn.onclick = () => play(tv.url);
+
+      list.appendChild(btn);
+    });
+  }
+}
+
+function showSeasons(seriesIndex) {
+  list.innerHTML = "";
+
+  let series = data.series[seriesIndex];
+
+  series.seasons.forEach((season, si) => {
+    let title = document.createElement("h3");
+    title.innerText = "Season " + season.season;
+    list.appendChild(title);
+
+    season.episodes.forEach(ep => {
+      let btn = document.createElement("button");
+      btn.innerText = ep.title;
+
+      btn.onclick = () => play(ep.url);
+
+      list.appendChild(btn);
+    });
   });
 }
 
-function playVideo(index) {
-  player.src = videos[index].url;
+function play(url) {
+  player.src = url;
   player.play();
 }
