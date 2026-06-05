@@ -10,7 +10,40 @@ fetch("data.json")
     data = json;
     showMenu("series");
   });
+async function loadM3U(url) {
+  const res = await fetch(url);
+  const text = await res.text();
 
+  const lines = text.split("\n");
+  let channels = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].startsWith("#EXTINF")) {
+      let name = lines[i].split(",")[1];
+      let link = lines[i + 1];
+
+      channels.push({ title: name, url: link });
+    }
+  }
+
+  return channels;
+}async function showIPTV() {
+  list.innerHTML = "";
+
+  let channels = await loadM3U("live.m3u");
+
+  channels.forEach(ch => {
+    let btn = document.createElement("button");
+    btn.innerText = ch.title;
+
+    btn.onclick = () => {
+      player.src = ch.url;
+      player.play();
+    };
+
+    list.appendChild(btn);
+  });
+}
 function showMenu(type) {
   list.innerHTML = "";
 
